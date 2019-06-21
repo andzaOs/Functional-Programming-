@@ -1,4 +1,19 @@
-{-- Prüfung 2010-03-04 --}
+{-- Prüfung 2019-06-21 --}
+
+data BTp a b = Nil | Node a b (BTp a b) (BTp a b)
+
+requal :: (Eq b) => BTp a b -> BTp b c -> Bool
+requal Nil Nil                           = True
+requal (Node _ b t1 t2) (Node c _ t3 t4) = (b == c) && requal t1 t3 && requal t2 t4
+requal _ _                               = False
+
+filterbt :: (a -> Bool) -> BTPlus a b -> BTPlus c a -> [a]
+filterbt _ Nil Nil              = []
+filterbt f (Node a _ t1 t2) Nil = [a | f a] ++ filterbt f t1 Nil ++ filterbt f t2 Nil
+filterbt f Nil (Node _ b t1 t2) = [b | f b] ++ filterbt f Nil t1 ++ filterbt f Nil t2
+filterbt f t1 t2                = filterbt f t1 Nil ++ filterbt f Nil t2
+
+{-- Prüfung 2010-03-04 
 
 data BTree a = Nil | Node Integer a (BTree a) (BTree a)
 
@@ -16,7 +31,7 @@ b Nil _ = []
 b (Node x c left right) y
   | x > y = c : (b left y) ++ (b right y)
   | otherwise = (b left y) ++ (b right y)
-
+--}
 
 {-- Prüfung 2010-01-21 
 
@@ -188,6 +203,25 @@ filterb f (Node a b l r) = [a | f b] ++ filterb l ++ filterb r
 
 --}
 
+{-- Prüfung 2013-01-17
+
+data BTplus a = Nil | Node a (BTplus a) (BTplus a)
+
+sym :: (Eq a) => BTplus a -> BTplus b -> Bool
+sym Nil Nil = True
+sym (Node a1 l1 r1) (Node a2 l2 r2) = sym l1 l2 && sym r1 r2 && notEqual a1 l1 && notEqual a1 r1
+sym _ _ = False
+
+notEqual ::  (Eq a) => a -> BTplus a -> Bool
+notEqual _ Nil = True
+notEqual a (Node b l r) = a/=b && notEqual a l && notEqual a r
+
+filtert :: (BTplus a -> Bool) -> BTplus a -> [BTplus a]
+filtert f Nil = []
+filtert f (Node _ n1 n2) = [n1 | f n1] ++ [n2 | f n2] ++ filtert f n1 ++ filtert f n2
+
+--}
+
 {-- Prüfung 2014-03-07
 
 import Data.List 
@@ -207,7 +241,6 @@ sym n@(Node a a1 a2) (Node _ b1 b2) = (sym a1 b1) && (sym a2 b2) && (nub f) == f
 
 --}
 
-
 {-- Prüfung 2014-03-07 
 
 data TTree a b c = Nil | Node a b c (TTree a b c) (TTree a b c) (TTree a b c)
@@ -225,14 +258,15 @@ filtertt f n@(Node a b c t1 t2 t2) = [n|f a b] ++ filtertt t1 ++ filtertt t2 ++ 
 
 --}
 
-{-- Prüfung 2014-01-16
+{-- Prüfung 2014-01-16 
+
 
 data BTPlus a b = Node a b (BTPlus a b) (BTPlus a b) | Nil deriving Show
 
 
-vergleiche :: (Eq a) => (BTPlus a b) -> (BTPlus b a) -> Bool
+vergleiche :: (Eq a) => (BTPlus a b) -> (BTPlus c a) -> Bool
 vergleiche Nil Nil  = True
-vergleiche (Node a b l1 r1) (Node c d l2 r2) = a == d && vergleiche l1 l2 && vergleiche r1 r2
+vergleiche (Node a _ l1 r1) (Node _ d l2 r2) = a == d && vergleiche l1 l2 && vergleiche r1 r2
 vergleiche _ _      = False
 
 
@@ -240,7 +274,7 @@ isEqual :: [Char] -> Bool
 isEqual a = a /= "f"
 
 
-filterbt :: (a -> Bool) -> BTplus a b -> BTplus c a -> [a]
+filterbt :: (a -> Bool) -> BTPlus a b -> BTPlus c a -> [a]
 filterbt _ Nil Nil              = []
 filterbt f (Node a _ t1 t2) Nil = [a | f a] ++ filterbt f t1 Nil ++ filterbt f t2 Nil
 filterbt f Nil (Node _ b t1 t2) = [b | f b] ++ filterbt f Nil t1 ++ filterbt f Nil t2
@@ -311,14 +345,14 @@ count a (Node b l r) = (if a == b then 1 else 0) + (count a l) + (count a r)
 
 --}
 
-{-- Prüfung 2018-03-02
+{-- Prüfung 2018-03-02 
 
 data BTree a = Node a (BTree a) (BTree a) | Nil
 
 
 juniq :: Eq a => BTree a -> Bool
 juniq Nil = True
-juniq (Node a l r) = ((count a l) < 2) && ((count a r) < 2) && (juniq l) && (juniq r)
+juniq (Node a l r) = ((count a l) + (count a r) < 2) && (juniq l) && (juniq r)
 
 count :: Eq a => a -> BTree a -> Integer
 count _ Nil = 0
@@ -331,14 +365,14 @@ trx f n@(Node a l r) = [(a,l,r)|f n] ++ (trx f l) ++ (trx f r)
 --}
 
 
-{-- Prüfung 2018-01-18
+{-- Prüfung 2018-01-18 
 
 
 data BTPlus a b = Nil | Node a b (BTPlus a b) (BTPlus a b) deriving (Eq, Show)
 
-requal :: (Eq a, Eq b) => BTPlus a b -> BTPlus b a -> Bool
+requal :: (Eq b) => BTPlus a b -> BTPlus b c -> Bool
 requal Nil Nil  = True
-requal (Node a b l1 r1) (Node c d l2 r2) = a == d && b == c && requal l1 l2 && requal r1 r2
+requal (Node a b l1 r1) (Node c d l2 r2) = b == c && requal l1 l2 && requal r1 r2
 requal _ _      = False
 
 isEqual :: [Char] -> Bool
@@ -351,4 +385,6 @@ filterbt f Nil (Node _ b t1 t2) = [b | f b] ++ filterbt f Nil t1 ++ filterbt f N
 filterbt f t1 t2                = filterbt f t1 Nil ++ filterbt f Nil t2
 
 --}
+
+
 

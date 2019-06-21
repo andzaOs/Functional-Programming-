@@ -1,4 +1,28 @@
-{-- Prüfung 2012-01-19 --}
+{-- Prüfung 2019-06-21 --}
+
+mnr7 = tail [0,1,5,6,5,7,6,9] :: [Integer]  {- Matrikelnummer -}
+name = "Max Mustermann" :: String {- Name -}
+
+t1 = ("p1", length mnr7, (show.take 3)mnr7, (zip name.take 3.drop 3) name)
+
+t2 = (\a b c d -> ( (b.a)d, (a.b)d )) 
+
+t3 = t2 (take 3) reverse (drop 3) mnr7
+
+t4 = (drop 4 [[i-1] | i<-mnr7], take 3 [i | i<-mnr7, i>4])
+
+t5 = take 4 [[i|j<-[i..5]] | i<-mnr7]
+
+tls _ = (tail.reverse.tail.tail)
+t6 = (tls 1 mnr7, take 5 [(i,j)| i <- tls 2 mnr7, j <- tls 3 mnr7, j<i])
+
+p o (b:m) (a:l) n = o a b : p o l m n
+p _ _ _ n = n
+
+t7 = p (+) (reverse mnr7) mnr7 [10]
+
+
+{-- Prüfung 2012-01-19 
 
 mnr = [0,1,2,3,4,5,6]  :: [Int]
 name = "Max Mustermann" :: String
@@ -25,7 +49,7 @@ t7 = (p [mnr!!5, mnr!!6] [] [], p mnr [] [])
 
 -- ((11,6),(15,15)) :: ((Int,Int),(Int,Int))
 
-
+--}
 
 {-- Prüfung 2013-04-26 
 
@@ -87,7 +111,7 @@ t7 = (p [mnr!!5, mnr!!6], p mnr)
 --}
 
 
-{-- Prüfung 2013-01-17
+{-- Prüfung 2013-01-17  
 
 mnr = [0,1,2,3,4,5,6]  :: [Int]
 name = "Max Mustermann" :: String
@@ -112,14 +136,14 @@ t6 = ( ml 2 mnr, take 5[(i,j)|i<- ml 2 mnr, j<- ml 2 mnr, j>=i ]);
 p (a:b:l) xs ys = p l (a:b:xs) (b:ys);
 p _ xs ys = (sum xs, product ys);
 t7 = ( p (drop 4 mnr) [1] [], p mnr [1] []);
--- ((10, 6),(16, 15)) :: ((Int,Int),(Int,Int))
+-- ((10, 5),(16, 15)) :: ((Int,Int),(Int,Int))
 
- --}
+--}
 
 
-{-- Prüfung 2014-03-07
+{-- Prüfung 2014-03-07 
 
-mnr = [0,2,0,0,3,3,1] :: [Integer]; {- Matrikelnummer -}
+mnr = [0,2,0,0,3,3,1]
 name = "Smith John" :: String; {- Familienname, Vorname(n) -}
 knz = "999" :: String; {- Kennzahl -}
 
@@ -288,14 +312,14 @@ t7 = p (+) (reverse mnr) mnr [11]
 --}
 
 
-{-- Prüfung 2017-01-19
+{-- Prüfung 2017-01-19 
 
 mnr = [1,2,3,4,5,6,7] :: [Integer]; {-Matrikelnummer-}
 name = "Mustermann, Max" :: String; {- Familienname, Vorname(n) -}
 knz = "E033 534" :: String {- Kennzahl -}
 
 t1 = ("p1", (take 2.reverse.show)mnr, (head.words.(\n o ->o:name)'-')'+');
-{- ("p1", "[7", "+Mustermann,") :: ([Char], [Char], [Char]) --}
+{- ("p1", "]7", "+Mustermann,") :: ([Char], [Char], [Char]) --}
 
 t4 = ( [i|i<-mnr, i>2], [(i, i`mod`3)|i<-mnr] );
 {- ([3,4,5,6,7], [(1, 1), (2, 2), (3, 0), (4, 1), (5, 2), (6, 0), (7, 1)]) :: ([Integer], [(Integer, Integer)] --}
@@ -323,7 +347,7 @@ name = "Mustermann, Max" :: String; {- Familienname, Vorname(n) -}
 knz = "E033 534" :: String {- Kennzahl -}
 
 t1 = ("p1", (take 2.reverse.show)mnr, (head.words.(\n o ->o:name)'-')'+');
-{- ("p1", "[7", "+Mustermann,") :: ([Char], [Char], [Char]) --}
+{- ("p1", "]7", "+Mustermann,") :: ([Char], [Char], [Char]) --}
 
 t4 = ( [i|i<-mnr, i>3], [(i, i`mod`3)|i<-mnr] );
 {- ([4,5,6,7],[(1,1),(2,2),(3,0),(4,1),(5,2),(6,0),(7,1)]) :: ([Integer], [(Integer, Integer)]) -}
@@ -401,5 +425,7 @@ t7 = p (+) (reverse mnr) mnr [12]
 {- t7 = [8,8,8,8,8,8,8,12] :: [Integer] -}
 
 --}
+
+
 
 
